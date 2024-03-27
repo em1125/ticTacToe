@@ -1,6 +1,6 @@
 // https://react.dev/learn/tutorial-tic-tac-toe
 // March 23, 2024
-// to do: improves for tic-tac-toe listed at the end of the website 
+// to do: improves for tic-tac-toe listed at end of tutorial 
 
 import { useState } from "react";
 
@@ -33,6 +33,15 @@ function Board({ xIsNext, squares, onPlay }) {
   } else {
     status = 'Next player: ' + (xIsNext ? 'X' : 'O');
   }
+
+  // for (let i = 0; i < 3; i++){
+  //   <div className="board-row">
+  //     {for (let j = 0; j < 3; j++){
+  //       <Square value= {squares[i*3 + j]} onSquareClick={() => handleClick(i*3 +j)} />
+      
+  //     }
+  //   </div>
+  // }
  
   return (
     <>
@@ -59,7 +68,6 @@ function Board({ xIsNext, squares, onPlay }) {
 }
 
 export default function Game() {
-  // const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -77,14 +85,23 @@ export default function Game() {
 
   const moves = history.map((squares, move) => {
     let description;
-    if (move > 0){
+    let lastMove;
+    
+    //enhancement 1:  current move only displays message, instead of button
+    lastMove = (move == currentMove);
+    if (lastMove) {
+      description = 'You are at move # ' + move;
+    } else if (move > 0){
       description = 'Go to move #' + move;
     } else {
       description = 'Go to game start';
     }
     return (
       <li key={move}>
-        <button onClick={() => jumpto(move)}>{description}</button>
+        { (lastMove)
+          ? description : 
+          <button onClick={() => jumpto(move)}>{description}</button>
+        }
       </li>
     );
   });
@@ -115,4 +132,8 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a]==squares[b] && squares[a]==squares[c]) {
-      retu
+      return squares[a];
+    }
+  }
+  return null;
+}
